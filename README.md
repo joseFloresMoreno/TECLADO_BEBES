@@ -9,14 +9,28 @@ Un sitio web interactivo y estimulante diseñado especialmente para bebés menor
 - Múltiples emojis y frutas que caen, rebotan y giran
 - Efectos visuales como anillos pulsantes y ondas de sonido
 
-🎵 **Efectos de Sonido**
-- Tonos divertidos que se reproducen con cada interacción
-- Frecuencias variadas para estimular diferentes patrones auditivos
+🎵 **Sistema de Voz y Audio Avanzado**
+- Síntesis de voz con Web Speech API en español (México, Colombia, Argentina)
+- Soporte para archivos MP3 personalizados con fallback automático a síntesis
+- Voz lenta y tono agudo diseñado especialmente para bebés
+- Pronunciación clara de números y vocales
 
-🎮 **Interactividad Completa**
-- **Teclado**: Presiona cualquier tecla para generar efectos
-- **Ratón**: Haz clic en cualquier lugar de la pantalla
-- **Pantalla Táctil**: Compatible con dispositivos móviles y tabletas
+🎮 **Tres Modos de Juego**
+
+1. **Modo Emoticonos** 😊
+   - Emojis y frutas coloridas
+   - Interacción libre con teclado, ratón y pantalla táctil
+   - Efectos visuales dinámicos con cada interacción
+
+2. **Modo Números** 🔢
+   - Presiona 0-9 para ver números grandes en pantalla
+   - Reproducción de audio (MP3 o síntesis) para cada número
+   - Números con colores aleatorios para mayor estimulación visual
+
+3. **Modo Vocales** 🅰️
+   - Presiona A, E, I, O, U para ver vocales grandes
+   - Pronunciación clara de cada vocal en español
+   - Emojis relacionados con las vocales
 
 🍎 **Frutas y Emojis**
 - Manzana, naranja, limón, plátano, sandía, fresa, piña y más
@@ -24,10 +38,31 @@ Un sitio web interactivo y estimulante diseñado especialmente para bebés menor
 
 ## 🚀 Cómo Usar
 
+### 📋 Seleccionar un Modo
 1. **Abre el archivo `index.html`** en tu navegador web
-2. **Presiona cualquier tecla** del teclado para ver los efectos
-3. **Haz clic** en cualquier lugar de la pantalla
-4. **Toca la pantalla** si usas un dispositivo móvil
+2. **Selecciona un modo de juego** en el menú inicial:
+   - 😊 **Emoticonos**: Interacción libre con emojis
+   - 🔢 **Números**: Aprende números presionando 0-9
+   - 🅰️ **Vocales**: Aprende vocales presionando A, E, I, O, U
+
+3. **Regresa al menú**: Presiona el botón "☰ Menú" en la esquina superior
+
+### 🎮 Interacción en Cada Modo
+
+**Modo Emoticonos:**
+- Presiona cualquier tecla
+- Haz clic en la pantalla
+- Toca la pantalla (dispositivos móviles)
+
+**Modo Números:**
+- Presiona las teclas 0-9 para ver números grandes
+- Escucha la pronunciación de cada número
+- Cada número tiene un color aleatorio diferente
+
+**Modo Vocales:**
+- Presiona A, E, I, O, U
+- Escucha la pronunciación clara de cada vocal
+- Observa emojis relacionados con cada vocal
 
 ¡Eso es todo! El bebé puede explorar libremente sin preocupaciones.
 
@@ -48,7 +83,24 @@ El sitio incluye protecciones para evitar que los bebés accedan a funciones no 
 - **F11** - Activa pantalla completa (recomendado para mayor enfoque)
 - Todas las téclas normales generan efectos visuales y sonoros
 
-## 📱 Compatibilidad
+## � Estructura del Proyecto
+
+```
+teclado-bebes/
+├── index.html           # Archivo principal (entrada a la aplicación)
+├── css/
+│   └── styles.css       # Estilos y animaciones
+├── js/
+│   └── script.js        # Lógica de la aplicación
+├── audios/              # Archivos de audio MP3 (opcional)
+│   ├── 0.mp3 -> 9.mp3   # Pronunciación de números
+│   └── a.mp3, e.mp3, ... # Pronunciación de vocales
+├── README.md            # Este archivo
+└── .gitignore          # Configuración de Git
+
+```
+
+## �📱 Compatibilidad
 
 - ✅ Chrome, Firefox, Safari, Edge
 - ✅ Computadoras de escritorio
@@ -58,14 +110,57 @@ El sitio incluye protecciones para evitar que los bebés accedan a funciones no 
 
 ## 🎨 Personalización
 
-Si deseas cambiar los emojis o frutas, edita el array `emojis` en el archivo `index.html`:
+### 🔊 Sistema de Audios (MP3 con Fallback a Síntesis)
+
+El aplicativo utiliza un sistema inteligente que:
+1. **Busca archivos MP3** en la carpeta `/audios/`
+2. **Reproduce el archivo** si existe
+3. **Fallback automático** a síntesis de voz si el archivo no existe
+
+#### Agregar Archivos de Audio Personalizados
+
+Para agregar pronunciaciones personalizadas, crea archivos MP3:
+
+**Para Números:**
+```
+audios/0.mp3
+audios/1.mp3
+audios/2.mp3
+... hasta audios/9.mp3
+```
+
+**Para Vocales:**
+```
+audios/a.mp3
+audios/e.mp3
+audios/i.mp3
+audios/o.mp3
+audios/u.mp3
+```
+
+El sistema automáticamente usará estos archivos si existen. Si no, reproducirá la síntesis de voz en español.
+
+#### Voces Disponibles (Síntesis)
+- 🇲🇽 Español (México) - es-MX
+- 🇨🇴 Español (Colombia) - es-CO
+- 🇦🇷 Español (Argentina) - es-AR
+
+### 🎨 Personalizar Emojis
+
+Si deseas cambiar los emojis de cada modo, edita el objeto `contenidoModos` en `js/script.js`:
 
 ```javascript
-const emojis = [
-    '🍎', '🍊', '🍋', '🍌', '🍉', // Frutas
-    '😊', '😄', '😍', '🤩',      // Caritas
-    // Agrega más emojis aquí
-];
+const contenidoModos = {
+    emoticonos: [
+        '🍎', '🍊', '🍋', // Agrega tus emojis favoritos
+    ],
+    numeros: [
+        '0️⃣', '1️⃣', '2️⃣', // Variantes numéricas
+    ],
+    vocales: [
+        '🅰️', '🅴️', '🅸️', // Letras destacadas
+    ]
+};
 ```
 
 ## 💡 Consejos de Uso
@@ -77,12 +172,52 @@ const emojis = [
 
 ## 🧠 Beneficios del Desarrollo
 
-- Estimulación visual con colores brillantes y movimientos
-- Desarrollo auditivo a través de tonos variados
-- Coordinación motriz mediante interacción con el teclado o pantalla táctil
-- Causa y efecto: el bebé aprende que sus acciones generan resultados
+- **Estimulación Visual** con colores brillantes, movimientos y números grandes
+- **Desarrollo Auditivo** a través de:
+  - Tonos variados en cada interacción
+  - Pronunciación clara de números (0-9)
+  - Pronunciación clara de vocales (A-E-I-O-U)
+  - Voces naturales en español con velocidad adaptada para bebés
+- **Reconocimiento de Números** mediante repetición y pronunciación clara
+- **Reconocimiento de Vocales** base del alfabeto
+- **Coordinación Motriz** mediante interacción con teclado o pantalla táctil
+- **Causa y Efecto** - El bebé aprende que sus acciones generan resultados inmediatos
+- **Aprendizaje Multimodal** combinando visual, auditivo y motor
 
-## 📄 Licencia
+## � Detalles Técnicos
+
+### Sistema de Síntesis de Voz
+
+La aplicación utiliza la **Web Speech API** del navegador para síntesis clara:
+
+- **Velocidad**: 0.5x (50% más lento, diseñado para bebés)
+- **Tono**: 1.5 (más agudo y amigable para menores)
+- **Volumen**: 100%
+- **Idioma**: Español Latinoamericano (es-MX como preferencia)
+
+### Selección de Voz
+
+El sistema intenta usar voces en este orden:
+1. 🇲🇽 Español México (es-MX)
+2. 🇨🇴 Español Colombia (es-CO)
+3. 🇦🇷 Español Argentina (es-AR)
+4. Cualquier otra voz en español
+
+### Stack Tecnológico
+
+- **HTML5** - Estructura semántica
+- **CSS3** - Animaciones y responsividad
+- **JavaScript ES6+** - Lógica interactiva y síntesis de voz
+- **Web Speech API** - Síntesis de voz nativa del navegador
+- **Google Fonts** - Tipografía amigable (Lilita One, Quicksand, Fredoka One)
+
+### Sin Dependencias Externas
+
+✅ Cero librerías JavaScript
+✅ Cero APIs pagadas
+✅ Funciona completamente offline (excepto los Google Fonts)
+
+## �📄 Licencia
 
 Libre para usar con propósitos personales y educativos.
 
