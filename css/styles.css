@@ -299,3 +299,168 @@ body {
         opacity: 0;
     }
 }
+
+/* ===== RESPONSIVE DESIGN PARA MÓVILES ===== */
+
+/* Tablets y pantallas medianas (480px - 768px) */
+@media (max-width: 768px) {
+    .menu-titulo {
+        font-size: 54px;
+        margin-bottom: 15px;
+    }
+    
+    .menu-subtitle {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+    
+    .menu-opciones {
+        gap: 25px;
+        padding: 20px;
+    }
+    
+    .opcion-boton {
+        width: 150px;
+        height: 150px;
+        border-radius: 20px;
+        border: 4px solid white;
+        font-size: 60px;
+    }
+    
+    .opcion-label {
+        font-size: 20px;
+        margin-top: 10px;
+    }
+    
+    .info-text {
+        font-size: 16px;
+        bottom: 15px;
+        left: 15px;
+    }
+    
+    .boton-menu {
+        top: 15px;
+        right: 15px;
+        padding: 10px 15px;
+        font-size: 16px;
+    }
+    
+    .numero-grande {
+        font-size: 200px;
+    }
+    
+    .emoji {
+        font-size: 60px;
+    }
+}
+
+/* Smartphones pequeños (hasta 480px) */
+@media (max-width: 480px) {
+    body {
+        height: 100vh;
+        overflow-y: scroll;
+    }
+    
+    .menu-inicial {
+        gap: 20px;
+        padding: 20px 0;
+        justify-content: flex-start;
+        padding-top: 80px;
+    }
+    
+    .menu-titulo {
+        font-size: 40px;
+        margin-bottom: 10px;
+    }
+    
+    .menu-subtitle {
+        font-size: 16px;
+        margin-bottom: 15px;
+        padding: 0 15px;
+        text-align: center;
+    }
+    
+    .menu-opciones {
+        gap: 15px;
+        padding: 20px;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+    }
+    
+    .opcion-boton {
+        width: 140px;
+        height: 140px;
+        border-radius: 18px;
+        border: 3px solid white;
+        font-size: 50px;
+        flex-shrink: 0;
+    }
+    
+    .opcion-label {
+        font-size: 16px;
+        margin-top: 8px;
+        letter-spacing: 1px;
+    }
+    
+    .opcion-boton:hover {
+        transform: scale(1.05);
+    }
+    
+    .info-text {
+        font-size: 14px;
+        bottom: 12px;
+        left: 12px;
+        right: 12px;
+        max-width: calc(100% - 24px);
+    }
+    
+    .boton-menu {
+        top: 12px;
+        right: 12px;
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    
+    .numero-grande {
+        font-size: 150px;
+    }
+    
+    .emoji {
+        font-size: 50px;
+    }
+}
+
+/* Ultra pequeños (menos de 370px - teléfonos muy compactos) */
+@media (max-width: 370px) {
+    .menu-titulo {
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+    
+    .menu-subtitle {
+        font-size: 14px;
+    }
+    
+    .menu-opciones {
+        gap: 12px;
+        padding: 15px;
+    }
+    
+    .opcion-boton {
+        width: 120px;
+        height: 120px;
+        border-radius: 15px;
+        border: 2px solid white;
+        font-size: 45px;
+    }
+    
+    .opcion-label {
+        font-size: 13px;
+        margin-top: 6px;
+    }
+    
+    .numero-grande {
+        font-size: 120px;
+    }
+}
