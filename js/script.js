@@ -1,6 +1,57 @@
 // Estado del juego - Inicia como null para mostrar el menú
 let modoActual = null;
 
+// ===== SISTEMA DE BLOQUEO DE REPRODUCCIÓN =====
+// Previene múltiples reproducciones simultáneas en modo números y vocales
+let bloqueadoReproduccion = false;
+
+// Función para bloquear reproducciones (2 segundos)
+function bloquearReproduccion() {
+    bloqueadoReproduccion = true;
+    setTimeout(() => {
+        bloqueadoReproduccion = false;
+    }, 2000);
+}
+
+// ===== SISTEMA DE CACHÉ DE AUDIOS =====
+// Almacena qué archivos de audio existen
+const audioCache = {
+    numeros: {},  // { 0: true/false, 1: true/false, ... }
+    vocales: {},  // { a: true/false, e: true/false, ... }
+    cargado: false
+};
+
+// Función para precargar y verificar audios disponibles
+async function precargarAudios() {
+    // Verificar números (0-9)
+    for (let i = 0; i <= 9; i++) {
+        audioCache.numeros[i] = await verificarArchivoAudio(`audios/${i}.mp3`);
+    }
+    
+    // Verificar vocales (a, e, i, o, u)
+    const vocales = ['a', 'e', 'i', 'o', 'u'];
+    for (const vocal of vocales) {
+        audioCache.vocales[vocal] = await verificarArchivoAudio(`audios/${vocal}.mp3`);
+    }
+    
+    audioCache.cargado = true;
+    
+    // Log resumido
+    const numerosDisponibles = Object.values(audioCache.numeros).filter(v => v).length;
+    const vocalesDisponibles = Object.values(audioCache.vocales).filter(v => v).length;
+    console.log(`✅ Audios precargados: ${numerosDisponibles}/10 números, ${vocalesDisponibles}/5 vocales`);
+}
+
+// Función auxiliar para verificar si un archivo existe
+async function verificarArchivoAudio(ruta) {
+    try {
+        const response = await fetch(ruta, { method: 'HEAD' });
+        return response.ok;
+    } catch {
+        return false;
+    }
+}
+
 
 
 // Arrays de emojis/caracteres por modo
@@ -53,18 +104,32 @@ function mostrarMenu() {
 
 // Función para reproducir número con audio MP3 o síntesis de voz
 function hablarNumero(numero) {
-    const audioPath = `audios/${numero}.mp3`;
-    const audio = new Audio(audioPath);
+    // Si el audio existe en caché, reproducirlo
+    if (audioCache.cargado && audioCache.numeros[numero]) {
+        reproducirArchivoAudio(`audios/${numero}.mp3`, () => usarSintesisNumero(numero));
+        return;
+    }
+    
+    // Si no existe en caché, ir directo a síntesis
+    usarSintesisNumero(numero);
+}
+
+// Función auxiliar para reproducir un archivo de audio
+function reproducirArchivoAudio(ruta, fallbackFn) {
+    const audio = new Audio(ruta);
     audio.volume = 1.0;
     
     audio.oncanplay = () => {
-        audio.play().catch(() => usarSintesisNumero(numero));
-        console.log('🎵 Reproduciendo archivo MP3:', audioPath);
+        audio.play().catch(() => {
+            console.warn('⚠️ Error al reproducir:', ruta);
+            if (fallbackFn) fallbackFn();
+        });
+        console.log('🎵 Reproduciendo audio:', ruta);
     };
     
     audio.onerror = () => {
-        console.log('⚠️ No encontrado:', audioPath, '→ Usando síntesis de voz');
-        usarSintesisNumero(numero);
+        console.warn('⚠️ Audio no encontrado:', ruta);
+        if (fallbackFn) fallbackFn();
     };
     
     audio.load();
@@ -104,21 +169,15 @@ function usarSintesisNumero(numero) {
 // Función para reproducir vocal con audio MP3 o síntesis de voz
 function hablarVocal(vocal) {
     const vocalLower = vocal.toLowerCase();
-    const audioPath = `audios/${vocalLower}.mp3`;
-    const audio = new Audio(audioPath);
-    audio.volume = 1.0;
     
-    audio.oncanplay = () => {
-        audio.play().catch(() => usarSintesisVocal(vocal));
-        console.log('🎵 Reproduciendo archivo MP3:', audioPath);
-    };
+    // Si el audio existe en caché, reproducirlo
+    if (audioCache.cargado && audioCache.vocales[vocalLower]) {
+        reproducirArchivoAudio(`audios/${vocalLower}.mp3`, () => usarSintesisVocal(vocal));
+        return;
+    }
     
-    audio.onerror = () => {
-        console.log('⚠️ No encontrado:', audioPath, '→ Usando síntesis de voz');
-        usarSintesisVocal(vocal);
-    };
-    
-    audio.load();
+    // Si no existe en caché, ir directo a síntesis
+    usarSintesisVocal(vocal);
 }
 
 // Función auxiliar para síntesis de voz de vocales
@@ -275,7 +334,10 @@ document.addEventListener('keydown', (event) => {
     if (modoActual === 'numeros') {
         // Solo permitir teclas numéricas 0-9
         if (event.key >= '0' && event.key <= '9') {
-            mostrarNumeroGrande(event.key);
+            if (!bloqueadoReproduccion) {
+                bloquearReproduccion();
+                mostrarNumeroGrande(event.key);
+            }
         }
         // Bloquear todas las outras teclas
         event.preventDefault();
@@ -288,7 +350,10 @@ document.addEventListener('keydown', (event) => {
         const vocales = ['a', 'e', 'i', 'o', 'u'];
         // Solo permitir teclas vocales
         if (vocales.includes(teclaLower)) {
-            mostrarVocalGrande(teclaLower);
+            if (!bloqueadoReproduccion) {
+                bloquearReproduccion();
+                mostrarVocalGrande(teclaLower);
+            }
         }
         // Bloquear todas las otras teclas
         event.preventDefault();
@@ -331,16 +396,22 @@ document.addEventListener('click', (event) => {
 
     // Si estamos en modo números
     if (modoActual === 'numeros') {
-        const numeroAleatorio = Math.floor(Math.random() * 10);
-        mostrarNumeroGrande(numeroAleatorio);
+        if (!bloqueadoReproduccion) {
+            bloquearReproduccion();
+            const numeroAleatorio = Math.floor(Math.random() * 10);
+            mostrarNumeroGrande(numeroAleatorio);
+        }
         return;
     }
 
     // Si estamos en modo vocales
     if (modoActual === 'vocales') {
-        const vocales = ['a', 'e', 'i', 'o', 'u'];
-        const vocalAleatoria = vocales[Math.floor(Math.random() * vocales.length)];
-        mostrarVocalGrande(vocalAleatoria);
+        if (!bloqueadoReproduccion) {
+            bloquearReproduccion();
+            const vocales = ['a', 'e', 'i', 'o', 'u'];
+            const vocalAleatoria = vocales[Math.floor(Math.random() * vocales.length)];
+            mostrarVocalGrande(vocalAleatoria);
+        }
         return;
     }
 
@@ -364,16 +435,22 @@ document.addEventListener('touchstart', (event) => {
     
     // Si estamos en modo números
     if (modoActual === 'numeros') {
-        const numeroAleatorio = Math.floor(Math.random() * 10);
-        mostrarNumeroGrande(numeroAleatorio);
+        if (!bloqueadoReproduccion) {
+            bloquearReproduccion();
+            const numeroAleatorio = Math.floor(Math.random() * 10);
+            mostrarNumeroGrande(numeroAleatorio);
+        }
         return;
     }
 
     // Si estamos en modo vocales
     if (modoActual === 'vocales') {
-        const vocales = ['a', 'e', 'i', 'o', 'u'];
-        const vocalAleatoria = vocales[Math.floor(Math.random() * vocales.length)];
-        mostrarVocalGrande(vocalAleatoria);
+        if (!bloqueadoReproduccion) {
+            bloquearReproduccion();
+            const vocales = ['a', 'e', 'i', 'o', 'u'];
+            const vocalAleatoria = vocales[Math.floor(Math.random() * vocales.length)];
+            mostrarVocalGrande(vocalAleatoria);
+        }
         return;
     }
 
@@ -455,4 +532,10 @@ document.addEventListener('keydown', (event) => {
     if (event.ctrlKey && event.shiftKey && event.code === 'KeyK') {
         event.preventDefault();
     }
+});
+
+// ===== INICIALIZACIÓN =====
+// Precargar audios cuando el documento esté listo
+document.addEventListener('DOMContentLoaded', () => {
+    precargarAudios();
 });
