@@ -538,4 +538,26 @@ document.addEventListener('keydown', (event) => {
 // Precargar audios cuando el documento esté listo
 document.addEventListener('DOMContentLoaded', () => {
     precargarAudios();
+    
+    // Agregar event listeners a los botones del menú
+    const botonEmoticonos = document.getElementById('botoEmoticonos');
+    const botonNumeros = document.getElementById('botoNumeros');
+    const botonVocales = document.getElementById('botoVocales');
+    const botonMenu = document.getElementById('botonMenu');
+    
+    if (botonEmoticonos) {
+        botonEmoticonos.addEventListener('click', () => seleccionarModo('emoticonos'));
+    }
+    
+    if (botonNumeros) {
+        botonNumeros.addEventListener('click', () => seleccionarModo('numeros'));
+    }
+    
+    if (botonVocales) {
+        botonVocales.addEventListener('click', () => seleccionarModo('vocales'));
+    }
+    
+    if (botonMenu) {
+        botonMenu.addEventListener('click', mostrarMenu);
+    }
 });

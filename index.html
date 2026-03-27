@@ -14,22 +14,22 @@
         <div class="menu-subtitle">¿Con qué quieres jugar?</div>
         
         <div class="menu-opciones">
-            <div class="opcion-boton" data-modo="emoticonos" onclick="seleccionarModo('emoticonos')">
+            <div class="opcion-boton" id="botoEmoticonos" data-modo="emoticonos">
                 <div>😊</div>
                 <div class="opcion-label">Emoticonos</div>
             </div>
-            <div class="opcion-boton" data-modo="numeros" onclick="seleccionarModo('numeros')">
+            <div class="opcion-boton" id="botoNumeros" data-modo="numeros">
                 <div>1️⃣</div>
                 <div class="opcion-label">Números</div>
             </div>
-            <div class="opcion-boton" data-modo="vocales" onclick="seleccionarModo('vocales')">
+            <div class="opcion-boton" id="botoVocales" data-modo="vocales">
                 <div>🅰️</div>
                 <div class="opcion-label">Vocales</div>
             </div>
         </div>
     </div>
 
-    <button class="boton-menu" id="botonMenu" onclick="mostrarMenu()" style="display: none;">☰ Menú</button>
+    <button class="boton-menu" id="botonMenu" style="display: none;">☰ Menú</button>
 
     <div class="container" id="container"></div>
     <div class="info-text" id="infoText">🎹 ¡Presiona cualquier tecla! 🎉</div>
